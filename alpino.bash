@@ -106,7 +106,8 @@ fi
 if  [ "$os" = "linux" ]
 then
     docker run \
-       -e DISPLAY \
+        -d \
+        -e DISPLAY \
        --net=host \
        --user=`id -u`:`id -g` \
        --rm \
@@ -122,6 +123,7 @@ then
         ip=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
         xhost + $ip
         docker run \
+           -d \
            -e DISPLAY=$ip:0 \
            -v /tmp/.X11-unix:/tmp/.X11-unix \
            --net=host \
@@ -133,13 +135,14 @@ then
     else
 	echo Directory /tmp/.X11-unix not found, no GUI available
 	docker run \
-	    --rm \
+        -d \
+      --rm \
 	    -i -t \
 	    -v "$DIR":/work/data \
 	    rugcompling/alpino:latest "$@"
     fi
 else
-    docker run \
+    docker run -d \
        --rm \
        -i -t \
        -v "$DIR":/work/data \
